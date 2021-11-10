@@ -10,38 +10,31 @@
         <aside class="aside-left-filters">
           <!-- Searchbox -->
           <div class="nice-input-wrapper">
-              <input type="text" name="name" placeholder="Search by name" class="nice-input" onk="search_deck(); return false;" />
+              <input v-model="searhText" type="text" name="name" placeholder="Search by name" class="nice-input" />
               <span class="focus-border"><i></i></span>
           </div>
         </aside>
         <!-- Characters View -->
         <main class="main-view">
-          <navbar class="pagination">
+          <!--div class="pagination">
             <button type="button" id="btn_prev" onclick="paginate(-1);" disabled >Prev</button> 
             <div id="page" class="info_page">1</div>
             <button type="button" id="btn_next" onclick="paginate(1);"  disabled >Next</button> 
-            <div class="info_total"><span id="total">2</span> CHARACTERS FOUND</div>
-          </navbar>
+            <div class="info_total">{{total}} CHARACTERS FOUND</div>
+          </div-->
           <article class="characters-list">
               <ul>
-                <li class="card">
+                <li class="card" v-for="character in filterCharacters" :key="character.name">
                     <div class="card-content" style="transition: all 300ms ease-in-out 0s; transform: rotateY(0deg) rotateX(0deg);">
+                        {{character.name}}<button style="" type="button" @click="removeCharacter(character)">X</button> 
                         <span class="shine" style="opacity: 0; background: rgba(0, 0, 0, 0) linear-gradient(-70.4116deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 80%) repeat scroll 0% 0%;"></span>
-                        <span class="title" style="opacity: 0; transform: translateY(100px) translateZ(0px);">Iron Man</span>
-                        <span class="description" style="opacity: 0; transform: translateY(150px) translateZ(0px);">
-                            Wounded, captured and forced to build a weapon by his enemies, billionaire industrialist Tony Stark instead created an advanced suit of armor to save his life and escape captivity. Now with a new outlook on life, Tony uses his money and intelligence to make the world a safer, better place as Iron Man.
+                        <span class="title" >
+                          {{character.name}} 
                         </span>
-                        <img src="http://i.annihil.us/u/prod/marvel/i/mg/9/c0/527bb7b37ff55.jpg">
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="card-content" style="transition: all 300ms ease-in-out 0s; transform: rotateY(0deg) rotateX(0deg);">
-                        <span class="shine" style="opacity: 0; background: rgba(0, 0, 0, 0) linear-gradient(-266.998deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0) 80%) repeat scroll 0% 0%;"></span>
-                        <span class="title" style="opacity: 0; transform: translateY(100px) translateZ(0px);">
-                            Captain America (Marvel War of Heroes)
+                        <span class="description" >
+                          {{character.description}}
                         </span>
-                        <span class="description" style="opacity: 0; transform: translateY(150px) translateZ(0px);"></span>
-                        <img src="http://i.annihil.us/u/prod/marvel/i/mg/2/03/5239c005a4827.jpg">
+                        <img v-bind:src="`${character.thumbnail.path}.${character.thumbnail.extension}`" />
                     </div>
                 </li>
               </ul>
@@ -54,8 +47,36 @@
 <script>
 export default {
   data: () => ({
-    title: 'Marvel Vue - Characters Evolutio'
-  })
+    title: 'Marvel Vue - Characters',
+    api_url: '/api/nachoam/marvel-vue-characters/main/json/characters.json',
+    characters:[],
+    searhText:'',
+    total:0,
+  }),
+  fetchOnServer:false,
+  async fetch() {
+      //Si no se almacenan por defecto los valores al borrar hay que recargar
+      await this.loadData();
+  },
+  computed:{
+    filterCharacters: function(){
+      return this.characters
+                .filter( character => character.name.toUpperCase().includes(this.searhText.toUpperCase()))
+    }
+  },
+  methods:{
+    loadData: async function(){
+          console.log('GO')
+          let {data:response_data} = await this.$axios.get(this.api_url)
+          console.log("ENTRIES:" , response_data)
+          this.characters = response_data.data.results;
+          this.total = response_data.data.total
+    },
+    removeCharacter:function(characterToRemove){
+        this.characters = this.characters
+                .filter( character => character !== characterToRemove)
+    }
+  }
 }
 </script>
 
@@ -256,6 +277,8 @@ ul {
     display: flex;
     flex-flow: wrap;
     list-style: none;
+    margin-bottom: 100px;
+
 }
 
 .card-content {
@@ -338,16 +361,22 @@ ul {
     display: inline-block;
 
 }
-.pagination button{
-    float: left;
+button {
     background-color: var(--quaternary-color); /* Green */
     border: none;
     color: white;
+    padding: 2px 4px;
+    border-radius: var(--radius-element);
+    text-align: center;
+    cursor: pointer;
+
+}
+.pagination button{
+    float: left;
     padding: 12px 32px;
     border-radius: var(--radius-element);
     text-align: center;
     font-size: 15px;
-    cursor: pointer;
     transition-duration: 0.4s;
 }
 

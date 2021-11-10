@@ -31,12 +31,19 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/axios',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
   ],
-
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/api/': { target: 'https://raw.githubusercontent.com/',pathRewrite: { "^/api/": "" } },
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }
