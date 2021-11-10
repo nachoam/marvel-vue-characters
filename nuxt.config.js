@@ -43,6 +43,7 @@ export default {
   },
   proxy: {
     '/api/': { target: 'https://raw.githubusercontent.com/',pathRewrite: { "^/api/": "" } },
+    '/apimarvel/':{target: 'http://gateway.marvel.com/',pathRewrite: { "^/apimarvel/": "" } },
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
