@@ -1,9 +1,9 @@
 {
-	data:{
-		offset: 0,
-		limit: 20,
-		total: 12,
-		results: [
+	"data":{
+		"offset": 0,
+		"limit": 20,
+		"total": 12,
+		"results": [
 			{
 				"id": 1017304,
 				"name": "War Machine (Marvel: Avengers Alliance)",
@@ -11,7 +11,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/c/03/5239b57a59812",
 					"extension": "jpg"
-				},
+				}
 			
 			},
 			{
@@ -21,7 +21,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/6/20/53176a7b3a4e4",
 					"extension": "jpg"
-				},
+				}
 			},
 			{
 				"id": 1009189,
@@ -39,7 +39,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/9/03/5239b59f49020",
 					"extension": "jpg"
-				},
+				}
 			},
 			{
 				"id": 1009697,
@@ -48,7 +48,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/9/d0/5111527040594",
 					"extension": "jpg"
-				},
+				}
 			},
 			{
 				"id": 1009368,
@@ -57,7 +57,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/9/c0/527bb7b37ff55",
 					"extension": "jpg"
-				},
+				}
 			},
 			{
 				"id": 1017327,
@@ -66,7 +66,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/2/03/5239c005a4827",
 					"extension": "jpg"
-				},
+				}
 			},
 			{
 				"id": 1017311,
@@ -75,8 +75,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/2/70/5239be7020a11",
 					"extension": "jpg"
-				},
-				
+				}
 			},
 			{
 				"id": 1009297,
@@ -85,7 +84,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/f/b0/5111505fb7009",
 					"extension": "jpg"
-				},
+				}
 			},
 			{
 				"id": 1009562,
@@ -94,7 +93,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/6/70/5261a7d7c394b",
 					"extension": "jpg"
-				},
+				}
 			},
 			{
 				"id": 1010740,
@@ -103,7 +102,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/d/03/5265478293c1e",
 					"extension": "jpg"
-				},
+				}
 			},
 			{
 				"id": 1010801,
@@ -112,7 +111,7 @@
 				"thumbnail": {
 					"path": "http://i.annihil.us/u/prod/marvel/i/mg/e/20/52696868356a0",
 					"extension": "jpg"
-				},
+				}
 			}
 		]
 		
