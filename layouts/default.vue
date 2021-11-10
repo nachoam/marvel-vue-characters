@@ -1,3 +1,30 @@
+<template>
+  <div>
+    <navbar :title="title" />
+    <!-- Content -->
+    <div id="app" style="padding-top:64px" v-cloak>
+        <nuxt/>
+    </div>
+  </div>
+</template>
+
+<script>
+import navbar from '../components/navbar.vue'
+
+
+export default {
+  components: { navbar },
+  
+  data() {
+    return {
+      title: 'Vue - Characters',
+    }
+  },
+  computed:{ },
+  methods:{}
+}
+</script>
+<style >
 :root{
     --principal-color:#e23636;
     --secondary-color:#000;
@@ -194,6 +221,8 @@ ul {
     display: flex;
     flex-flow: wrap;
     list-style: none;
+    margin-bottom: 100px;
+
 }
 
 .card-content {
@@ -276,16 +305,22 @@ ul {
     display: inline-block;
 
 }
-.pagination button{
-    float: left;
+button {
     background-color: var(--quaternary-color); /* Green */
     border: none;
     color: white;
+    padding: 2px 4px;
+    border-radius: var(--radius-element);
+    text-align: center;
+    cursor: pointer;
+
+}
+.pagination button{
+    float: left;
     padding: 12px 32px;
     border-radius: var(--radius-element);
     text-align: center;
     font-size: 15px;
-    cursor: pointer;
     transition-duration: 0.4s;
 }
 
@@ -371,3 +406,5 @@ ul {
     100% { transform: rotate(360deg); }
   }
 
+
+</style>
