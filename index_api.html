@@ -1,0 +1,232 @@
+Ç<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="shortcut icon" href="images/favicon.ico">
+        <title>Marvel Vue - Characters</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/style.css">
+        <!-- <style>[v-cloak]{display: none;}</style> -->
+     </head>
+     <body>
+        <!-- Header -->
+        <header class="main-header">
+            Marvel Vue - Characters
+        </header>
+        <!-- Content -->
+        <div id="app" class="main-content" v-cloak>
+           <!-- Left Side Filters -->
+           <aside class="aside-left-filters">
+              <!-- Searchbox -->ccs
+              <div class="nice-input-wrapper">
+                 <input type="text" name="name" placeholder="Search by name" class="nice-input" onk="search_deck(); return false;" />
+                 <span class="focus-border"><i></i></span>
+              </div>
+              <p class="checkboxes-list-title">Type</p>
+              <div class="checkboxes-list">
+                 <!-- Type Selector -->
+                 <div class="md-checkbox">
+                    <input id="checkbox-grass" type="checkbox" value="grass">
+                    <label for="checkbox-grass">
+                       <i class="material-icons" style="color: rgb(120, 200, 80);">lens</i>
+                       <span class="label-title">grass</span>
+                    </label>
+                 </div>
+                 <!-- Type Selector -->
+                 <div class="md-checkbox">
+                    <input id="checkbox-poison" type="checkbox" value="poison">
+                    <label for="checkbox-poison">
+                       <i class="material-icons" style="color: rgb(160, 64, 160);">lens</i>
+                       <span class="label-title">poison</span>
+                    </label>
+                 </div>
+              </div>
+           </aside>
+           <!-- Characters View -->
+           <main class="main-view">
+              <navbar class="pagination">
+                <button type="button" id="btn_prev" onclick="paginate(-1);" >Prev</button> 
+                <div id="page" class="info_page"></div>
+                <button type="button" id="btn_next" onclick="paginate(1);"  >Next</button> 
+                <div class="info_total"><span id="total"></span> CHARACTERS FOUND</div>
+              </navbar>
+              <article class="characters-list">
+              </article>
+           </main>
+        </div>
+        <div id="overlay" style="display: none;"><div class="loader"></div> </div> 
+    </body>
+    <script>
+        // INSERT HERE YOUR HASH AND PUBLIC API MARVEL KEY
+        // HOW TO CREATE: https://medium.com/zurvin/jugando-con-la-api-de-marvel-y-javascript-c3afad762c2c
+        //const apiKey = "ts=1000&apikey=<PUBLIC_API_KEY>&hash=<HASH GENERATED WITH TS+PRIVATE_API_KEY+PUBLIC_API_KEY>"
+        const current_page = 0;
+
+        const loading = function(_show){
+            document.getElementById("overlay").style.display = _show === true ? '' : 'none'; 
+
+        }
+
+        const httpGet = function(theUrl)
+        {
+            loading(true)
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+            xmlHttp.send( null );
+            loading(false)
+            return xmlHttp.responseText;
+        } 
+
+        const getMarvelCharacter = function(_page = 0) {
+            console.log("PAGINA ", this.current_page)
+            this.current_page = _page
+            const limit = 20
+            const offset = this.current_page === 0 ? 0 : limit * this.current_page;
+            const name = encodeURI(document.getElementsByName("name")[0].value);
+            console.log('search character: ', name)
+            let filter = name ? `nameStartsWith=${name}&` : "";
+            const fullItems = JSON.parse(httpGet(`http://gateway.marvel.com/v1/public/characters?${filter}offset=${offset}&${apiKey}`));
+            if(fullItems.data){
+                /*
+                    offset, limit, total, count
+                */
+                let _total = fullItems.data.total;
+                console.log(`total: ${_total}, offset:${fullItems.data.offset}, limit:${fullItems.data.limit}, count:${fullItems.data.count}`)
+                document.getElementById("total").innerHTML= _total
+                document.getElementById("page").innerHTML = (this.current_page + 1);
+                
+                document.getElementById("btn_prev").disabled = this.current_page === 0; 
+                document.getElementById("btn_next").disabled = ( this.current_page + 1 ) * limit >= _total;
+
+
+                const marvel_cards = fullItems.data.results.map( item => item)
+                const cards_html = marvel_cards.map(card => '<li class="card"><div class="card-content"><span class="shine"></span><span class="title">'+card.name+'</span><span class="description">'+card.description+'</span><img src="'+card.thumbnail.path+"."+card.thumbnail.extension+'"></div></li>').reduce((card_html, html) => card_html + html, '<ul>') + '</ul>';
+                document.querySelector('article').innerHTML = cards_html;
+            }
+        }
+
+        const on_move = function(card_content, card, shine, e) {
+            let rect=card.getBoundingClientRect();
+            let offsetLeft = rect.left;
+            let offsetTop = rect.top
+            const relativeX = e.pageX - offsetLeft;
+            const relativeY = e.pageY - offsetTop;
+            const xAxis = (card.offsetWidth / 2 - relativeX) / 8;
+            const yAxis = (card.offsetHeight / 2 - relativeY) / 16;
+
+            card_content.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+
+            arad = Math.atan2(yAxis, xAxis),
+            angle = arad * 180 / Math.PI - 90;
+            shine.style.background = 'linear-gradient(' + angle + 'deg, rgba(255,255,255,' + (relativeY)/card.offsetHeight  + ') 0%,rgba(255,255,255,0) 80%)';
+        }
+
+        const on_mouse_enter = function(card_content, card, title, description, shine, e) {
+            console.log("EVENTO",card, e)
+            let rect=card.getBoundingClientRect();
+            let offsetLeft = rect.left;
+            let offsetTop = rect.top
+            const relativeX = e.pageX - offsetLeft;
+            const relativeY = e.pageY - offsetTop;
+
+
+            console.log("EVENTO",e.pageY,card.offsetTop, relativeY)
+            
+
+            const xAxis = (card.offsetWidth / 2 - relativeX) / 8;
+            const yAxis = (card.offsetHeight / 2 - relativeY) / 16;
+            title.style.opacity = 1;
+            description.style.opacity = 1;
+            shine.style.opacity = 0.7;
+            title.style.transform = 'translateY(100px) translateZ(100px)';
+            description.style.transform = 'translateY(150px) translateZ(40px)';
+
+            
+            card_content.style.transition = 'none';
+            card_content.offsetHeight;
+            card_content.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+
+            arad = Math.atan2(yAxis, xAxis),
+            angle = arad * 180 / Math.PI - 90;
+            shine.style.background = 'linear-gradient(' + angle + 'deg, rgba(255,255,255,' + (relativeY)/card.offsetHeight  + ') 0%,rgba(255,255,255,0) 80%)';
+        }
+
+        const on_mouse_leave = function(title, description, shine, card_content) {
+            const xAxis = 0;
+            const yAxis = 0;
+            title.style.opacity = 0;
+            description.style.opacity = 0;
+            shine.style.opacity = 0;
+            title.style.transform = 'translateY(100px) translateZ(0px)';
+            description.style.transform = 'translateY(150px) translateZ(0px)';
+
+            card_content.style.transition = '300ms ease-in-out all';
+            card_content.offsetHeight;
+            card_content.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        }
+
+        const subscribeEvents = function() {
+            const cards_dom = document.querySelectorAll('.card');
+
+            cards_dom.forEach(card => {
+                const card_content = card.querySelector('.card-content');
+                const title = card_content.querySelector('.title');
+                const description = card_content.querySelector('.description');
+                const shine = card_content.querySelector('.shine');
+                card.addEventListener('mouseleave', function(e) {
+                    on_mouse_leave(title, description, shine, card_content);
+                })
+                card.addEventListener('touchend', function(e) {
+                    on_mouse_leave(title, description, shine, card_content);
+                })
+                card.addEventListener('touchcancel', function(e) {
+                    on_mouse_leave(title, description, shine, card_content);
+                })
+                card.addEventListener('mouseenter', function(e) {
+                    on_mouse_enter(card_content, card, title, description, shine, e);
+                })
+                card.addEventListener('touchstart', function(e) {
+                    const new_event = {pageX: e.changedTouches[0].pageX, pageY: e.changedTouches[0].pageY};
+                    on_mouse_enter(card_content, card, title, description, shine, new_event);
+                })
+                card.addEventListener('mousemove', function(e) {
+                    on_move(card_content, card, shine, e);
+                });
+
+                card.addEventListener('touchmove', function(e) {
+                    console.log(e);
+                    const new_event = {pageX: e.changedTouches[0].pageX, pageY: e.changedTouches[0].pageY};
+                    on_move(card_content, card, shine, new_event);
+                });
+            });
+        }
+
+        document.getElementsByName("name")[0].addEventListener("keyup", function(event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                search_deck();
+            }
+        }); 
+
+
+        const paginate = function(offset){
+            this.current_page = this.current_page + offset;
+            search_deck(this.current_page);
+        }
+
+        const search_deck = function(_page = 0) {
+            getMarvelCharacter(_page);
+            subscribeEvents();
+            return false;
+        }
+        
+
+
+        search_deck()
+
+    </script>
+</html>

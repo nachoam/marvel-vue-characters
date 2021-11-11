@@ -12,25 +12,14 @@
       <main class="main-view">
         <div class="pagination">
           <button type="button"  @click="paginate(-1)" :disabled="disablePrev" >Prev </button> 
-          <div  class="info_page">1</div>
+          <div  class="info_page">{{page}}</div>
           <button type="button"  @click="paginate(1)"  :disabled="disableNext" >Next</button> 
           <div class="info_total">{{total}} CHARACTERS FOUND</div>
         </div>
         <article class="characters-list">
             <ul>
-              <li class="card" v-for="character in characters" :key="character.name">
-                  <div class="card-content" style="transition: all 300ms ease-in-out 0s; transform: rotateY(0deg) rotateX(0deg);">
-                      {{character.name}}
-                      <span class="shine" style="opacity: 0; background: rgba(0, 0, 0, 0) linear-gradient(-70.4116deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 80%) repeat scroll 0% 0%;"></span>
-                      <span class="title" >
-                        {{character.name}} 
-                      </span>
-                      <span class="description" >
-                        {{character.description}}
-                      </span>
-                      <img v-bind:src="`${character.thumbnail.path}.${character.thumbnail.extension}`" />
-                  </div>
-              </li>
+              <card :character="character" v-for="character in characters" :key="character.name" 
+                    :delete_button="false" />
             </ul>
         </article>
       </main>
@@ -56,7 +45,8 @@ export default {
     captainTeam: true,
     captainTeamCharactersIds:[
       1017327,1017311,1009297,1009562,1010740,1010801
-    ]
+    ],
+    controlFilterTime:null
   }),
   fetchOnServer:false,
   async fetch() {
@@ -65,8 +55,12 @@ export default {
   },
   watch:{
     searhText(val){
-      this.loadData()
-    },
+        if(this.controlFilterTime)clearTimeout(this.controlFilterTime)
+        this.controlFilterTime = setTimeout(async () => {
+          this.page = 1
+          await this.loadData()
+        }, 500);
+    }
   },
   computed:{
     disableNext: function(){

@@ -29,27 +29,10 @@
         </aside>
         <!-- Characters View -->
         <main class="main-view">
-          <!--div class="pagination">
-            <button type="button" id="btn_prev" onclick="paginate(-1);" disabled >Prev</button> 
-            <div id="page" class="info_page">1</div>
-            <button type="button" id="btn_next" onclick="paginate(1);"  disabled >Next</button> 
-            <div class="info_total">{{total}} CHARACTERS FOUND</div>
-          </div-->
           <article class="characters-list">
               <ul>
-                <li class="card" v-for="character in filterCharacters" :key="character.name">
-                    <div class="card-content" style="transition: all 300ms ease-in-out 0s; transform: rotateY(0deg) rotateX(0deg);">
-                        {{character.name}}<button style="" type="button" @click="removeCharacter(character)">X</button> 
-                        <span class="shine" style="opacity: 0; background: rgba(0, 0, 0, 0) linear-gradient(-70.4116deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 80%) repeat scroll 0% 0%;"></span>
-                        <span class="title" >
-                          {{character.name}} 
-                        </span>
-                        <span class="description" >
-                          {{character.description}}
-                        </span>
-                        <img v-bind:src="`${character.thumbnail.path}.${character.thumbnail.extension}`" />
-                    </div>
-                </li>
+                <card :character="character" v-for="character in filterCharacters" :key="character.name" 
+                  @remove_character="removeCharacter" :delete_button="true" />
               </ul>
           </article>
         </main>
@@ -57,7 +40,9 @@
 </template>
 
 <script>
+import card from '../components/card.vue';
 export default {
+  components: { card },
   data: () => ({
     title: 'Marvel Vue - Characters',
     api_url: '/api/nachoam/marvel-vue-characters/main/json/characters.json',
@@ -73,6 +58,7 @@ export default {
       1017327,1017311,1009297,1009562,1010740,1010801
     ]
   }),
+  layout: 'civilwar',
   fetchOnServer:false,
   async fetch() {
       //Si no se almacenan por defecto los valores al borrar hay que recargar
