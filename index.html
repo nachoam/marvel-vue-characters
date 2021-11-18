@@ -35,23 +35,15 @@
               <article class="characters-list">
                   <ul>
                     <li class="card">
-                        <div class="card-content" style="transition: all 300ms ease-in-out 0s; transform: rotateY(0deg) rotateX(0deg);">
-                            <span class="shine" style="opacity: 0; background: rgba(0, 0, 0, 0) linear-gradient(-70.4116deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 80%) repeat scroll 0% 0%;"></span>
-                            <span class="title" style="opacity: 0; transform: translateY(100px) translateZ(0px);">Iron Man</span>
-                            <span class="description" style="opacity: 0; transform: translateY(150px) translateZ(0px);">
-                                Wounded, captured and forced to build a weapon by his enemies, billionaire industrialist Tony Stark instead created an advanced suit of armor to save his life and escape captivity. Now with a new outlook on life, Tony uses his money and intelligence to make the world a safer, better place as Iron Man.
-                            </span>
-                            <img src="http://i.annihil.us/u/prod/marvel/i/mg/9/c0/527bb7b37ff55.jpg">
+                        <div class="card-content" >
+                            <img src="http://i.annihil.us/u/prod/marvel/i/mg/9/c0/527bb7b37ff55.jpg" width="300px"/>
+                            <span class="title" > Iron Man</span>            
                         </div>
                     </li>
                     <li class="card">
-                        <div class="card-content" style="transition: all 300ms ease-in-out 0s; transform: rotateY(0deg) rotateX(0deg);">
-                            <span class="shine" style="opacity: 0; background: rgba(0, 0, 0, 0) linear-gradient(-266.998deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0) 80%) repeat scroll 0% 0%;"></span>
-                            <span class="title" style="opacity: 0; transform: translateY(100px) translateZ(0px);">
-                                Captain America (Marvel War of Heroes)
-                            </span>
-                            <span class="description" style="opacity: 0; transform: translateY(150px) translateZ(0px);"></span>
-                            <img src="http://i.annihil.us/u/prod/marvel/i/mg/2/03/5239c005a4827.jpg">
+                        <div class="card-content" >
+                            <img src="http://i.annihil.us/u/prod/marvel/i/mg/2/03/5239c005a4827.jpg" width="300px"/>
+                            <span class="title" > Captain America (Marvel War of Heroes)</span>            
                         </div>
                     </li>
                   </ul>
@@ -61,113 +53,12 @@
         <div id="overlay" style="display: none;"><div class="loader"></div> </div> 
     </body>
     <script>
-        // INSERT HERE YOUR HASH AND PUBLIC API MARVEL KEY
-        // HOW TO CREATE: https://medium.com/zurvin/jugando-con-la-api-de-marvel-y-javascript-c3afad762c2c
-        //const apiKey = "ts=1000&apikey=<PUBLIC_API_KEY>&hash=<HASH GENERATED WITH TS+PRIVATE_API_KEY+PUBLIC_API_KEY>"
         const current_page = 0;
 
         const loading = function(_show){
             document.getElementById("overlay").style.display = _show === true ? '' : 'none'; 
 
         }
-
-    
-        const on_move = function(card_content, card, shine, e) {
-            let rect=card.getBoundingClientRect();
-            let offsetLeft = rect.left;
-            let offsetTop = rect.top
-            const relativeX = e.pageX - offsetLeft;
-            const relativeY = e.pageY - offsetTop;
-            const xAxis = (card.offsetWidth / 2 - relativeX) / 8;
-            const yAxis = (card.offsetHeight / 2 - relativeY) / 16;
-
-            card_content.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-
-            arad = Math.atan2(yAxis, xAxis),
-            angle = arad * 180 / Math.PI - 90;
-            shine.style.background = 'linear-gradient(' + angle + 'deg, rgba(255,255,255,' + (relativeY)/card.offsetHeight  + ') 0%,rgba(255,255,255,0) 80%)';
-        }
-
-        const on_mouse_enter = function(card_content, card, title, description, shine, e) {
-            console.log("EVENTO",card, e)
-            let rect=card.getBoundingClientRect();
-            let offsetLeft = rect.left;
-            let offsetTop = rect.top
-            const relativeX = e.pageX - offsetLeft;
-            const relativeY = e.pageY - offsetTop;
-
-
-            console.log("EVENTO",e.pageY,card.offsetTop, relativeY)
-            
-
-            const xAxis = (card.offsetWidth / 2 - relativeX) / 8;
-            const yAxis = (card.offsetHeight / 2 - relativeY) / 16;
-            title.style.opacity = 1;
-            description.style.opacity = 1;
-            shine.style.opacity = 0.7;
-            title.style.transform = 'translateY(100px) translateZ(100px)';
-            description.style.transform = 'translateY(150px) translateZ(40px)';
-
-            
-            card_content.style.transition = 'none';
-            card_content.offsetHeight;
-            card_content.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-
-            arad = Math.atan2(yAxis, xAxis),
-            angle = arad * 180 / Math.PI - 90;
-            shine.style.background = 'linear-gradient(' + angle + 'deg, rgba(255,255,255,' + (relativeY)/card.offsetHeight  + ') 0%,rgba(255,255,255,0) 80%)';
-        }
-
-        const on_mouse_leave = function(title, description, shine, card_content) {
-            const xAxis = 0;
-            const yAxis = 0;
-            title.style.opacity = 0;
-            description.style.opacity = 0;
-            shine.style.opacity = 0;
-            title.style.transform = 'translateY(100px) translateZ(0px)';
-            description.style.transform = 'translateY(150px) translateZ(0px)';
-
-            card_content.style.transition = '300ms ease-in-out all';
-            card_content.offsetHeight;
-            card_content.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        }
-
-        const subscribeEvents = function() {
-            const cards_dom = document.querySelectorAll('.card');
-
-            cards_dom.forEach(card => {
-                const card_content = card.querySelector('.card-content');
-                const title = card_content.querySelector('.title');
-                const description = card_content.querySelector('.description');
-                const shine = card_content.querySelector('.shine');
-                card.addEventListener('mouseleave', function(e) {
-                    on_mouse_leave(title, description, shine, card_content);
-                })
-                card.addEventListener('touchend', function(e) {
-                    on_mouse_leave(title, description, shine, card_content);
-                })
-                card.addEventListener('touchcancel', function(e) {
-                    on_mouse_leave(title, description, shine, card_content);
-                })
-                card.addEventListener('mouseenter', function(e) {
-                    on_mouse_enter(card_content, card, title, description, shine, e);
-                })
-                card.addEventListener('touchstart', function(e) {
-                    const new_event = {pageX: e.changedTouches[0].pageX, pageY: e.changedTouches[0].pageY};
-                    on_mouse_enter(card_content, card, title, description, shine, new_event);
-                })
-                card.addEventListener('mousemove', function(e) {
-                    on_move(card_content, card, shine, e);
-                });
-
-                card.addEventListener('touchmove', function(e) {
-                    console.log(e);
-                    const new_event = {pageX: e.changedTouches[0].pageX, pageY: e.changedTouches[0].pageY};
-                    on_move(card_content, card, shine, new_event);
-                });
-            });
-        }
-
 
 
         const paginate = function(offset){
@@ -178,7 +69,6 @@
             return false;
         }
         
-        subscribeEvents();
 
        // search_deck()
 
