@@ -32,8 +32,7 @@ export default {
     title: 'Marvel Vue - Characters',
     // INSERT HERE YOUR HASH AND PUBLIC API MARVEL KEY
     // HOW TO CREATE: https://medium.com/zurvin/jugando-con-la-api-de-marvel-y-javascript-c3afad762c2c
-    //apiKey : "ts=1000&apikey=<PUBLIC_API_KEY>&hash=<HASH GENERATED WITH TS+PRIVATE_API_KEY+PUBLIC_API_KEY>".
-    apiKey:"ts=1000&apikey=7333dd5c243af601409025591ed2bb25&hash=9adfe05749fab0b0a79dd49da77ab153",
+    apiKey : "ts=1000&apikey=<PUBLIC_API_KEY>&hash=<HASH GENERATED WITH TS+PRIVATE_API_KEY+PUBLIC_API_KEY>".
     characters:[],
     searhText:'',
     total:0,
